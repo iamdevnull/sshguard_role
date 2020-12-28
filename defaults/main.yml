@@ -1,2 +1,2 @@
 ---
-# defaults file for sshguard_role
+sshguard_whitelist: []  # Customer-specific whitelist, to be defined for customers who need it
