@@ -1,0 +1,29 @@
+---
+
+- name: install sshguard
+  apt:
+    pkg: sshguard
+    state: present
+    update_cache: true
+  tags: ['sshguard', 'sshguard:install']
+
+- name: Set sshguard whitelist
+  template:
+    src: whitelist.j2
+    dest: /etc/sshguard/whitelist
+  notify: restart sshguard
+  tags: ['sshguard', 'sshguard:configuration']
+
+- name: enable sshguard systemd service
+  systemd:
+    name: sshguard.service
+    enabled: true
+  when: ansible_distribution_release != 'trusty'
+  tags: ['sshguard', 'sshguard:configuration']
+
+- name: enable sshguard upstart service (trusty)
+  service:
+    name: sshguard
+    enabled: true
+  when: ansible_distribution_release == 'trusty'
+  tags: ['sshguard', 'sshguard:configuration']
