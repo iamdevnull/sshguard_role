@@ -7,15 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
-* added missing restart handler
-
 ### Changed
 ### Removed
+
+## [v1.0.1] - 2021-05-27
+
+* added missing restart handler
 
 ## [v1.0.0] - 2020-12-18
 ### Added
 - initial version. copied in from old `roles` repo.
 
-[Unreleased]: https://github.com/appsembler/sshguard_role/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/appsembler/sshguard_role/compare/v1.0.1...HEAD
+[v1.0.1]: https://github.com/appsembler/sshguard_role/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/appsembler/sshguard_role/releases/tag/v1.0.0
