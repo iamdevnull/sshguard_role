@@ -1,2 +1,5 @@
 ---
-# handlers file for sshguard_role
+- name: restart sshguard
+  service:
+    name: sshguard
+    state: restarted
