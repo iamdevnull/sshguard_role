@@ -1,5 +1,7 @@
 ---
 - name: restart sshguard
-  service:
+  systemd:
+    daemon_reload: true
     name: sshguard
     state: restarted
+  become: True
