@@ -18,12 +18,4 @@
   systemd:
     name: sshguard.service
     enabled: true
-  when: ansible_distribution_release != 'trusty'
-  tags: ['sshguard', 'sshguard:configuration']
-
-- name: enable sshguard upstart service (trusty)
-  service:
-    name: sshguard
-    enabled: true
-  when: ansible_distribution_release == 'trusty'
   tags: ['sshguard', 'sshguard:configuration']
