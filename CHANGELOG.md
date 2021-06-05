@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 
+- drop support for Ubuntu 14.04 Trusty.
+
 ## [v1.0.1] - 2021-05-27
 
 * added missing restart handler
