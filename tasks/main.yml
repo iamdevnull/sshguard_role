@@ -7,6 +7,13 @@
     update_cache: true
   tags: ['sshguard', 'sshguard:install']
 
+- name: add sshguard config
+  template:
+    src: sshguard.conf.j2
+    dest: /etc/sshguard/sshguard.conf
+  notify: restart sshguard
+  tags: ['sshguard', 'sshguard:configuration']
+
 - name: Set sshguard whitelist
   template:
     src: whitelist.j2
