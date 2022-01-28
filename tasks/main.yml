@@ -1,20 +1,53 @@
 ---
 
+- name: "check if sshguard is installed"
+  shell: 'dpkg -s sshguard'
+  ignore_errors: yes
+  changed_when: false
+  failed_when: false
+  register: package_check_sshguard
+
+- name: get sshguard version
+  shell: 'dpkg -s sshguard | grep -i "version" | grep -Eo "[0-9]\.[0-9]\.[0-9]"'
+  register: sshguard_version_tmp
+  changed_when: false
+  when: package_check_sshguard.rc == 0
+
+- name: convert sshguard version to float
+  set_fact:
+    sshguard_version: '{{ sshguard_version_tmp.stdout }}'
+  when: package_check_sshguard.rc == 0
+
+- name: uninstall sshguard
+  apt:
+    name: sshguard
+    state: absent
+    purge: yes
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "18" and package_check_sshguard.rc == 0 and sshguard_version is version('2.4.2', '<') 
+
+- name: copy deb file
+  copy:
+    src: ../files/sshguard_2.4.2-1_amd64.deb
+    dest: /tmp/sshguard_2.4.2-1_amd64.deb
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: install sshguard
   apt:
-    pkg: sshguard
-    state: present
-    update_cache: true
-  tags: ['sshguard', 'sshguard:install']
+    deb: /tmp/sshguard_2.4.2-1_amd64.deb
+  register: install_sshguard
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version >= "18"
 
-- name: add sshguard config
-  template:
-    src: sshguard.conf.j2
-    dest: /etc/sshguard/sshguard.conf
+- name: change nftables to iptables
+  ansible.builtin.replace:
+    path: /etc/sshguard/sshguard.conf
+    regexp: '^BACKEND=.*'
+    replace: 'BACKEND="/usr/libexec/sshguard/sshg-fw-iptables"'
   notify: restart sshguard
-  tags: ['sshguard', 'sshguard:configuration']
+  when: install_sshguard.changed or sshguard_version is version('2.4.2', '=')
 
-- name: Set sshguard whitelist
+- name: set sshguard whitelist
   template:
     src: whitelist.j2
     dest: /etc/sshguard/whitelist
